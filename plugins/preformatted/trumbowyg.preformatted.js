@@ -10,6 +10,10 @@
 (function ($) {
     'use strict';
 
+    var defaultOptions = {
+        className: '',
+    };
+
     $.extend(true, $.trumbowyg, {
         langs: {
             // jshint camelcase:false
@@ -40,6 +44,12 @@
         plugins: {
             preformatted: {
                 init: function (trumbowyg) {
+                    debugger
+                    trumbowyg.o.plugins.preformatted = $.extend(true, {},
+                      defaultOptions,
+                      trumbowyg.o.plugins.preformatted || {}
+                    );
+
                     var btnDef = {
                         fn: function () {
                             trumbowyg.saveRange();
@@ -51,13 +61,13 @@
                                         return unwrapCode();
                                     }
                                     else {
-                                        trumbowyg.execCmd('insertHTML', '<pre><code>' + strip(text) + '</code></pre>');
+                                        trumbowyg.execCmd('insertHTML', '<code class=' + trumbowyg.o.plugins.preformatted.className +
+                                            '>' + strip(text) +'</code>');
                                     }
                                 } catch (e) {
                                 }
                             }
-                        },
-                        tag: 'pre'
+                        }
                     };
 
                     trumbowyg.addBtnDef('preformatted', btnDef);
