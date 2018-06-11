@@ -61,7 +61,7 @@
                                     }
                                     else {
                                         trumbowyg.execCmd('insertHTML', '<code class=' + trumbowyg.o.plugins.preformatted.className +
-                                            '>' + strip(text) +'</code>');
+                                            '>' + escapeHtml(text) +'</code>');
                                     }
                                 } catch (e) {
                                 }
@@ -74,6 +74,21 @@
             }
         }
     });
+
+    function escapeHtml(string) {
+        var entityMap = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': '&quot;',
+            "'": '&#39;',
+            "/": '&#x2F;'
+        };
+
+        return String(string).replace(/[&<>"'\/]/g, function (s) {
+            return entityMap[s];
+        });
+    }
 
     /*
      * GetSelectionParentElement
@@ -95,16 +110,6 @@
         }
 
         return parentEl;
-    }
-
-    /*
-     * Strip
-     * returns a text without HTML tags
-     */
-    function strip(html) {
-        var tmp = document.createElement('DIV');
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || '';
     }
 
     /*
